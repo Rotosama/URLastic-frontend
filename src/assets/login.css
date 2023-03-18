@@ -1,0 +1,20 @@
+section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
+}
+.login-inputs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
+}
+.input {
+    width: 200px;
+}
+.form-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

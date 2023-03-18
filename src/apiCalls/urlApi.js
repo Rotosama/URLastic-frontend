@@ -9,8 +9,28 @@ class urlAPI {
             },
         };
         try {
-            const response = await axios.post(requestUrl, {originalUrl: originalUrl}, config);
-            console.log(response);
+            const response = await axios.post(
+                requestUrl,
+                { originalUrl: originalUrl },
+                config
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            return error.response.data;
+        }
+    }
+
+    static async getUrlById(token, urlId) {
+        let requestUrl = `${process.env.REACT_APP_BASE_URL}urls/${urlId}`;
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        try {
+            const response = await axios.get(requestUrl, urlId, config);
             return response.data;
         } catch (error) {
             console.error(error);

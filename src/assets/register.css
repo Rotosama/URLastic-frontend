@@ -1,0 +1,23 @@
+section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
+}
+.register-inputs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
+}
+.input {
+    width: 200px;
+    
+}
+.title-register {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+

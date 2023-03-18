@@ -1,3 +1,16 @@
 *{
     background-color: #eeee;
 }
+.url-container{
+    border: #ff5722 solid;
+    display: flex;
+    align-items: center;
+ justify-content: center;
+ flex-flow: column wrap;
+}
+.inputURL{
+    width: 450px;
+    height: 30px;
+    border: #46515e solid;
+    border-radius:  3% ;
+}

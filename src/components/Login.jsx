@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 import loginAPI from "../apiCalls/loginApi";
+import "../assets/login.css";
 
 const LogIn = () => {
     const navigate = useNavigate();
@@ -29,13 +30,15 @@ const LogIn = () => {
             <div className="login-content">
                 <form className="login-form" onSubmit={handleLoginSubmit}>
                     <div className="form-title">
-                        <h2 className="title-log-in">Inicio de sesión</h2>
+                        <h2 className="title-log-in">Log In</h2>
                     </div>
                     <div className="login-inputs">
                         <div className="login-field">
                             <label htmlFor="email" className="title-input">
                                 Email :
                             </label>
+                        </div>
+                        <div>
                             <input
                                 className="input"
                                 value={email}
@@ -49,6 +52,8 @@ const LogIn = () => {
                             <label htmlFor="password" className="title-input">
                                 Password:
                             </label>
+                        </div>
+                        <div>
                             <input
                                 className="input"
                                 value={password}
@@ -62,7 +67,7 @@ const LogIn = () => {
                         <button
                             className="btn-login"
                             type="submit"
-                            style={{ width: "180px" }}
+                            style={{ width: "150px" , color:'#ff7e55'}}
                         >
                             Sign in
                         </button>

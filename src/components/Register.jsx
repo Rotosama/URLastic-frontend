@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import registerAPI from "../apiCalls/registerApi";
+import "../assets/register.css";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -37,6 +38,8 @@ const Register = () => {
                         <label htmlFor="name" className="title-register-input">
                             Name:
                         </label>
+                    </div>
+                    <div>
                         <input
                             className="register-input"
                             value={firstName}
@@ -54,6 +57,8 @@ const Register = () => {
                         >
                             Last Name:
                         </label>
+                    </div>
+                    <div>
                         <input
                             className="register-input"
                             value={lastName}
@@ -68,6 +73,8 @@ const Register = () => {
                         <label htmlFor="Email" className="title-register-input">
                             Email:
                         </label>
+                    </div>
+                    <div>
                         <input
                             className="register-input"
                             value={email}
@@ -85,6 +92,8 @@ const Register = () => {
                         >
                             Password:
                         </label>
+                    </div>
+                    <div>
                         <input
                             className="register-input"
                             value={password}
@@ -103,7 +112,7 @@ const Register = () => {
                         <button
                             className="btn-registers"
                             type="submit"
-                            style={{ width: "180px" }}
+                            style={{ width: "150px", color: "#ff7e55" }}
                         >
                             Register
                         </button>
