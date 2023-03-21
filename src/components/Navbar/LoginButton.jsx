@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Login = () => {
+const LoginButton = () => {
     return (
         <>
             <Link to={"/login"}>
@@ -11,4 +11,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default LoginButton;

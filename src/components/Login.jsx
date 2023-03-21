@@ -21,6 +21,7 @@ const LogIn = () => {
         } else {
             userContext.setUserId(response.userId);
             userContext.setToken(response.token);
+            userContext.setIsLogged(true);
             navigate("/");
         }
     }

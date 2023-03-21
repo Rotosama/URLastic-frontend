@@ -30,7 +30,7 @@ const ShortenURL = (props) => {
                             style={{
                                 height: "auto",
                                 margin: "0 auto",
-                                maxWidth: 64,
+                                maxWidth: 150,
                                 width: "100%",
                             }}
                         >
