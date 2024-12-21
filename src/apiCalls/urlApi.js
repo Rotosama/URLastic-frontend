@@ -22,6 +22,22 @@ class urlAPI {
 		}
 	}
 
+	static async getAllUrls(token, userId) {
+		const requestUrl = `${process.env.REACT_APP_BASE_URL}users/${userId}/urls`;
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		try {
+			const response = await axios.get(requestUrl, config);
+			return response.data;
+		} catch (error) {
+			console.error(error);
+			return error.response.data;
+		}
+	}
+
 	static async getUrlById(token, urlId) {
 		let requestUrl = `${process.env.REACT_APP_BASE_URL}urls/${urlId}`;
 		const config = {
