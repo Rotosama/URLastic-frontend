@@ -33,7 +33,7 @@ const LoginForm = ({ handleOpen, setIsLogin }) => {
 	}
 
 	return (
-		<Card color="transparent" shadow={false}>
+		<Card color="transparent" shadow={false} className="flex items-center">
 			<Typography variant="h4" color="blue-gray">
 				Welcome Back
 			</Typography>

@@ -7,7 +7,6 @@ import CustomNavbar from "./components/Navbar/CustomNavbar";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import Redirect from "./components/Redirect";
-import AlertMessage from "./components/AlertMessage";
 
 function App() {
 	return (
