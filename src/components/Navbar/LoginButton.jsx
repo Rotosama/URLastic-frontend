@@ -1,14 +1,20 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Button } from "@material-tailwind/react";
+import LoginModal from "../LoginModal";
+import { useUserContext } from "../../context/UserContext";
 
-const LoginButton = () => {
-    return (
-        <>
-            <Link to={"/login"}>
-                <button>Log in</button>
-            </Link>
-        </>
-    );
-};
+export default function LoginButton() {
+	const [open, setOpen] = useState(false);
+	const { isLogged } = useUserContext();
 
-export default LoginButton;
+	const handleOpen = () => setOpen(!open);
+
+	return (
+		<>
+			<Button color="blue" onClick={handleOpen}>
+				{isLogged ? "Log out" : "Log In"}
+			</Button>
+			<LoginModal open={open} handleOpen={handleOpen} />
+		</>
+	);
+}

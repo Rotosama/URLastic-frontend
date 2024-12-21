@@ -1,58 +1,89 @@
-import React from "react";
-import { useContext, useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import {
+	Card,
+	CardHeader,
+	CardBody,
+	Typography,
+	Button,
+} from "@material-tailwind/react";
+import QRCode from "react-qr-code";
 import urlAPI from "../apiCalls/urlApi";
 import { UserContext } from "../context/UserContext";
-import { useEffect } from "react";
-import QRCode from "react-qr-code";
 
 const ShortenURL = (props) => {
-    const [shortUrl, setShortUrl] = useState("");
-    const { token } = useContext(UserContext);
+	const [shortUrl, setShortUrl] = useState("");
+	const { token } = useContext(UserContext);
+	const [copySuccess, setCopySuccess] = useState(false);
 
-    useEffect(() => {
-        const fetchShortUrl = async (token) => {
-            const requestedId = props.urlId;
-            const response = await urlAPI.getUrlById(token, requestedId);
-            setShortUrl(response.shortenUrl);
-        };
-        fetchShortUrl();
-    }, [props.urlId, token]);
+	useEffect(() => {
+		const fetchShortUrl = async (token) => {
+			const requestedId = props.urlId;
+			const response = await urlAPI.getUrlById(token, requestedId);
+			setShortUrl(response.shortenUrl);
+		};
+		if (props.urlId) {
+			fetchShortUrl(token);
+		}
+	}, [props.urlId, token]);
 
-    return (
-        <>
-            {shortUrl !== undefined ? (
-                <div className="short-container">
-                    <h4>Congratulations, here's your shortened URL:</h4>
-                    <h5>ID: {props.urlId}</h5>
-                    <div className="shorturl">
-                        <h5>{shortUrl}</h5>
-                        <div
-                            style={{
-                                height: "auto",
-                                margin: "0 auto",
-                                maxWidth: 150,
-                                width: "100%",
-                            }}
-                        >
-                            <QRCode
-                                size={512}
-                                style={{
-                                    height: "auto",
-                                    maxWidth: "100%",
-                                    width: "100%",
-                                }}
-                                value={props.url}
-                                viewBox={`0 0 256 256`}
-                                
-                            />
-                        </div>
-                    </div>
-                </div>
-            ) : (
-                <div className="short-container"></div>
-            )}
-        </>
-    );
+	const copyToClipboard = async () => {
+		try {
+			await navigator.clipboard.writeText(shortUrl);
+			setCopySuccess(true);
+			setTimeout(() => setCopySuccess(false), 2000); // Restablecer el mensaje después de 2 segundos
+		} catch (err) {
+			console.error("Failed to copy: ", err);
+		}
+	};
+
+	return (
+		<>
+			{shortUrl && props.url && (
+				<Card className="mt-6 w-96">
+					<CardHeader
+						color="blue-gray"
+						className="flex justify-center items-center"
+					>
+						<QRCode
+							size={200}
+							style={{
+								height: "auto",
+								maxWidth: "100%",
+								width: "100%",
+							}}
+							value={props.url}
+							viewBox={`0 0 256 256`}
+						/>
+					</CardHeader>
+					<CardBody>
+						<Typography
+							variant="h5"
+							color="blue-gray"
+							className="mb-2 text-center"
+						>
+							Share your URL:
+						</Typography>
+						<Typography color="blue-gray" className="text-center">
+							<div className="short-container">
+								<h5>ID: {props.urlId}</h5>
+								<div className="shorturl">
+									<h5>{shortUrl}</h5>
+									<Button
+										onClick={copyToClipboard}
+										color="amber"
+									>
+										{copySuccess
+											? "Copied!"
+											: "Copy to Clipboard"}
+									</Button>
+								</div>
+							</div>
+						</Typography>
+					</CardBody>
+				</Card>
+			)}
+		</>
+	);
 };
 
 export default ShortenURL;
