@@ -7,6 +7,8 @@ import CustomNavbar from "./components/Navbar/CustomNavbar";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import Redirect from "./components/Redirect";
+import Dashboard from "./components/User/Dashboard";
+import Account from "./components/User/Account";
 
 function App() {
 	return (
@@ -22,6 +24,8 @@ function App() {
 								path="/register"
 								element={<RegisterForm />}
 							/>
+							<Route path="/dashboard" element={<Dashboard />} />
+							<Route path="/account" element={<Account />} />
 							<Route path="/:shortUrl" element={<Redirect />} />
 						</Routes>
 					</Router>

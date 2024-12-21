@@ -1,31 +1,8 @@
-/*import React from "react";
-import "../../assets/navbar.css";
-import LoginButton from "./LoginButton";
-import LogoutButton from "./LogoutButton";
-import RegisterButton from "./RegisterButton";
-import { Link } from "react-router-dom";
-import {useUserContext } from "../../context/UserContext"
-
-const Navbar = () => {
-    const userContext = useUserContext();
-    return (
-        <div className="container-nav">
-            <Link to={"/"}>
-                <img src="/logo.png" alt="logo" />
-            </Link>
-            <div className="butons">
-                {userContext.isLogged? <LogoutButton /> : <LoginButton/>}
-                
-                <RegisterButton />
-            </div>
-        </div>
-    );
-};
-
-export default Navbar;*/
-
 import React from "react";
 import LoginButton from "./LoginButton";
+import { UserContext } from "../../context/UserContext";
+import { UserIcon } from "@heroicons/react/24/solid";
+import { Link } from "react-router-dom";
 
 import {
 	Navbar,
@@ -43,12 +20,14 @@ import {
 	Bars3Icon,
 	ChevronDownIcon,
 	XMarkIcon,
+	InboxArrowDownIcon,
 } from "@heroicons/react/24/outline";
 
 export function CustomNavbar() {
 	const [openMenu, setOpenMenu] = React.useState(false);
 	const [openNav, setOpenNav] = React.useState(false);
 	const [lang, setLang] = React.useState("English");
+	const { isLogged } = React.useContext(UserContext);
 
 	React.useEffect(() => {
 		window.addEventListener(
@@ -59,46 +38,29 @@ export function CustomNavbar() {
 
 	const navList = (
 		<ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+			{isLogged && (
+				<Typography
+					as="li"
+					variant="small"
+					color="blue-gray"
+					className="p-1 font-medium"
+				>
+					<Link to="/dashboard" className="flex items-center">
+						<InboxArrowDownIcon className="size-4 m-2" />
+						Dashboard
+					</Link>
+				</Typography>
+			)}
 			<Typography
 				as="li"
 				variant="small"
 				color="blue-gray"
 				className="p-1 font-medium"
 			>
-				<a href="#" className="flex items-center">
-					Pages
-				</a>
-			</Typography>
-
-			<Typography
-				as="li"
-				variant="small"
-				color="blue-gray"
-				className="p-1 font-medium"
-			>
-				<a href="#" className="flex items-center">
+				<Link to="/account" className="flex items-center">
+					<UserIcon className="size-4 m-2" />
 					Account
-				</a>
-			</Typography>
-			<Typography
-				as="li"
-				variant="small"
-				color="blue-gray"
-				className="p-1 font-medium"
-			>
-				<a href="#" className="flex items-center">
-					Blocks
-				</a>
-			</Typography>
-			<Typography
-				as="li"
-				variant="small"
-				color="blue-gray"
-				className="p-1 font-medium"
-			>
-				<a href="#" className="flex items-center">
-					Docs
-				</a>
+				</Link>
 			</Typography>
 		</ul>
 	);
@@ -127,7 +89,7 @@ export function CustomNavbar() {
 			<div className="flex items-center justify-between text-blue-gray-900">
 				<Typography
 					as="a"
-					href="#"
+					href="/"
 					className="mr-4 cursor-pointer py-1.5 font-medium"
 				>
 					<img src="/logo.png" alt="Logo" className="h-16 w-auto" />
