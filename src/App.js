@@ -9,6 +9,7 @@ import RegisterForm from "./components/RegisterForm";
 import Redirect from "./components/Redirect";
 import Dashboard from "./components/User/Dashboard";
 import Account from "./components/User/Account";
+import NotFound from "./components/NotFound";
 
 function App() {
 	return (
@@ -26,7 +27,11 @@ function App() {
 							/>
 							<Route path="/dashboard" element={<Dashboard />} />
 							<Route path="/account" element={<Account />} />
-							<Route path="/:shortUrl" element={<Redirect />} />
+							<Route
+								path="/urls/r/:shortUrl"
+								element={<Redirect />}
+							/>
+							<Route path="/404" element={<NotFound />} />
 						</Routes>
 					</Router>
 				</MessageProvider>

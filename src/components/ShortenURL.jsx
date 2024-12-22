@@ -28,7 +28,9 @@ const ShortenURL = (props) => {
 
 	const copyToClipboard = async () => {
 		try {
-			await navigator.clipboard.writeText(shortUrl);
+			await navigator.clipboard.writeText(
+				`${process.env.REACT_APP_BASE_URL}urls/r/${shortUrl}`
+			);
 			setCopySuccess(true);
 			setTimeout(() => setCopySuccess(false), 2000); // Restablecer el mensaje después de 2 segundos
 		} catch (err) {
@@ -67,7 +69,7 @@ const ShortenURL = (props) => {
 							<div className="short-container">
 								<h5>ID: {props.urlId}</h5>
 								<div className="shorturl">
-									<h5>{shortUrl}</h5>
+									<h5>{`${process.env.REACT_APP_BASE_URL}urls/r/${shortUrl}`}</h5>
 									<Button
 										onClick={copyToClipboard}
 										color="amber"
