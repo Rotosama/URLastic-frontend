@@ -1,17 +1,22 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import QRCode from "react-qr-code";
 import urlAPI from "../apiCalls/urlApi";
 import { UserContext } from "../context/UserContext";
+import { buildShortUrl } from "../utils/urlHelpers";
 import {
 	ClipboardDocumentIcon,
 	CheckIcon,
+	ArrowDownTrayIcon,
+	ShareIcon,
 } from "@heroicons/react/24/outline";
 
 const ShortenURL = (props) => {
 	const [shortUrl, setShortUrl] = useState("");
 	const { token } = useContext(UserContext);
 	const [copySuccess, setCopySuccess] = useState(false);
-	const fullShortUrl = `${process.env.REACT_APP_BASE_URL}urls/r/${shortUrl}`;
+	const [shareSuccess, setShareSuccess] = useState(false);
+	const qrRef = useRef(null);
+	const fullShortUrl = buildShortUrl(shortUrl);
 
 	useEffect(() => {
 		const fetchShortUrl = async () => {
@@ -28,6 +33,51 @@ const ShortenURL = (props) => {
 			setTimeout(() => setCopySuccess(false), 2000);
 		} catch (err) {
 			console.error("Failed to copy:", err);
+		}
+	};
+
+	const downloadQR = () => {
+		const svg = qrRef.current?.querySelector("svg");
+		if (!svg) return;
+
+		const svgData = new XMLSerializer().serializeToString(svg);
+		const canvas = document.createElement("canvas");
+		const size = 400;
+		canvas.width = size;
+		canvas.height = size;
+		const ctx = canvas.getContext("2d");
+		const img = new Image();
+
+		img.onload = () => {
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(0, 0, size, size);
+			ctx.drawImage(img, 0, 0, size, size);
+			const link = document.createElement("a");
+			link.download = `urlastic-qr-${shortUrl}.png`;
+			link.href = canvas.toDataURL("image/png");
+			link.click();
+		};
+
+		img.src =
+			"data:image/svg+xml;base64," +
+			btoa(unescape(encodeURIComponent(svgData)));
+	};
+
+	const handleShare = async () => {
+		if (navigator.share) {
+			try {
+				await navigator.share({ url: fullShortUrl });
+			} catch {
+				// user cancelled
+			}
+		} else {
+			try {
+				await navigator.clipboard.writeText(fullShortUrl);
+				setShareSuccess(true);
+				setTimeout(() => setShareSuccess(false), 2000);
+			} catch (err) {
+				console.error("Failed to copy:", err);
+			}
 		}
 	};
 
@@ -74,17 +124,47 @@ const ShortenURL = (props) => {
 					<p className="text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-4">
 						QR Code
 					</p>
-					<div className="p-4 bg-white border-2 border-[#1C1C1C] rounded-xl shadow-[3px_3px_0px_#1C1C1C]">
+					<div
+						ref={qrRef}
+						className="p-4 bg-white border-2 border-[#1C1C1C] rounded-xl shadow-[3px_3px_0px_#1C1C1C] mb-4"
+					>
 						<QRCode
 							size={140}
 							value={fullShortUrl}
-							style={{
-								height: "auto",
-								maxWidth: "100%",
-								width: "100%",
-							}}
+							style={{ height: "auto", maxWidth: "100%", width: "100%" }}
 							viewBox="0 0 256 256"
 						/>
+					</div>
+
+					{/* QR actions */}
+					<div className="flex gap-3 w-full">
+						<button
+							onClick={downloadQR}
+							className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-white border-2 border-[#1C1C1C] rounded-xl text-xs font-bold shadow-[3px_3px_0px_#1C1C1C] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#1C1C1C] transition-all text-[#1C1C1C]"
+						>
+							<ArrowDownTrayIcon className="h-4 w-4" />
+							Download
+						</button>
+						<button
+							onClick={handleShare}
+							className={`flex-1 flex items-center justify-center gap-2 py-2.5 border-2 border-[#1C1C1C] rounded-xl text-xs font-bold shadow-[3px_3px_0px_#1C1C1C] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#1C1C1C] transition-all ${
+								shareSuccess
+									? "bg-[#458B73] text-white"
+									: "bg-[#FF9760] text-[#1C1C1C]"
+							}`}
+						>
+							{shareSuccess ? (
+								<>
+									<CheckIcon className="h-4 w-4" />
+									Copied!
+								</>
+							) : (
+								<>
+									<ShareIcon className="h-4 w-4" />
+									Share
+								</>
+							)}
+						</button>
 					</div>
 				</div>
 			</div>
