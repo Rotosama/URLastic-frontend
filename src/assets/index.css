@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        background-color: #fffaf5;
+        color: #1c1c1c;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+    }
+}

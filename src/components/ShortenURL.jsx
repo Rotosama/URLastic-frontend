@@ -1,90 +1,94 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-	Card,
-	CardHeader,
-	CardBody,
-	Typography,
-	Button,
-} from "@material-tailwind/react";
 import QRCode from "react-qr-code";
 import urlAPI from "../apiCalls/urlApi";
 import { UserContext } from "../context/UserContext";
+import {
+	ClipboardDocumentIcon,
+	CheckIcon,
+} from "@heroicons/react/24/outline";
 
 const ShortenURL = (props) => {
 	const [shortUrl, setShortUrl] = useState("");
 	const { token } = useContext(UserContext);
 	const [copySuccess, setCopySuccess] = useState(false);
+	const fullShortUrl = `${process.env.REACT_APP_BASE_URL}urls/r/${shortUrl}`;
 
 	useEffect(() => {
-		const fetchShortUrl = async (token) => {
-			const requestedId = props.urlId;
-			const response = await urlAPI.getUrlById(token, requestedId);
+		const fetchShortUrl = async () => {
+			const response = await urlAPI.getUrlById(token, props.urlId);
 			setShortUrl(response.shortenUrl);
 		};
-		if (props.urlId) {
-			fetchShortUrl(token);
-		}
+		if (props.urlId) fetchShortUrl();
 	}, [props.urlId, token]);
 
 	const copyToClipboard = async () => {
 		try {
-			await navigator.clipboard.writeText(
-				`${process.env.REACT_APP_BASE_URL}urls/r/${shortUrl}`
-			);
+			await navigator.clipboard.writeText(fullShortUrl);
 			setCopySuccess(true);
-			setTimeout(() => setCopySuccess(false), 2000); // Restablecer el mensaje después de 2 segundos
+			setTimeout(() => setCopySuccess(false), 2000);
 		} catch (err) {
-			console.error("Failed to copy: ", err);
+			console.error("Failed to copy:", err);
 		}
 	};
 
+	if (!shortUrl || !props.url) return null;
+
 	return (
-		<>
-			{shortUrl && props.url && (
-				<Card className="mt-6 w-96">
-					<CardHeader
-						color="blue-gray"
-						className="flex justify-center items-center"
+		<div className="bg-white border-2 border-[#1C1C1C] rounded-2xl shadow-[4px_4px_0px_#1C1C1C] overflow-hidden">
+			{/* Top accent bar */}
+			<div className="h-2 bg-[#458B73]" />
+
+			<div className="p-6">
+				{/* Short URL row */}
+				<p className="text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-2">
+					Your short link
+				</p>
+				<div className="flex items-center gap-3 bg-[#FFFAF5] border-2 border-[#1C1C1C] rounded-xl px-4 py-3 mb-6">
+					<span className="flex-1 text-[#1C1C1C] font-semibold text-sm truncate">
+						{fullShortUrl}
+					</span>
+					<button
+						onClick={copyToClipboard}
+						className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border-2 border-[#1C1C1C] transition-all shadow-[2px_2px_0px_#1C1C1C] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#1C1C1C] flex-shrink-0 ${
+							copySuccess
+								? "bg-[#458B73] text-white"
+								: "bg-[#FFD150] text-[#1C1C1C]"
+						}`}
 					>
+						{copySuccess ? (
+							<>
+								<CheckIcon className="h-3.5 w-3.5" />
+								Copied!
+							</>
+						) : (
+							<>
+								<ClipboardDocumentIcon className="h-3.5 w-3.5" />
+								Copy
+							</>
+						)}
+					</button>
+				</div>
+
+				{/* QR Code */}
+				<div className="flex flex-col items-center pt-4 border-t-2 border-dashed border-[#E8E0D8]">
+					<p className="text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-4">
+						QR Code
+					</p>
+					<div className="p-4 bg-white border-2 border-[#1C1C1C] rounded-xl shadow-[3px_3px_0px_#1C1C1C]">
 						<QRCode
-							size={200}
+							size={140}
+							value={fullShortUrl}
 							style={{
 								height: "auto",
 								maxWidth: "100%",
 								width: "100%",
 							}}
-							value={props.url}
-							viewBox={`0 0 256 256`}
+							viewBox="0 0 256 256"
 						/>
-					</CardHeader>
-					<CardBody>
-						<Typography
-							variant="h5"
-							color="blue-gray"
-							className="mb-2 text-center"
-						>
-							Share your URL:
-						</Typography>
-						<Typography color="blue-gray" className="text-center">
-							<div className="short-container">
-								<h5>ID: {props.urlId}</h5>
-								<div className="shorturl">
-									<h5>{`${process.env.REACT_APP_BASE_URL}urls/r/${shortUrl}`}</h5>
-									<Button
-										onClick={copyToClipboard}
-										color="amber"
-									>
-										{copySuccess
-											? "Copied!"
-											: "Copy to Clipboard"}
-									</Button>
-								</div>
-							</div>
-						</Typography>
-					</CardBody>
-				</Card>
-			)}
-		</>
+					</div>
+				</div>
+			</div>
+		</div>
 	);
 };
 

@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Input, Button, Typography, Card } from "@material-tailwind/react";
 import registerAPI from "../apiCalls/registerApi";
 import { useUserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { useMessageContext } from "../context/MessageContext";
-import AlertMessage from "./AlertMessage";
 
 const RegisterForm = ({ handleOpen, setIsLogin }) => {
 	const { setToken, setIsLogged, setUserId } = useUserContext();
@@ -26,7 +24,6 @@ const RegisterForm = ({ handleOpen, setIsLogin }) => {
 		);
 		if (response.error) {
 			setErrorMessage(response.error.message);
-			console.log(errorMessage);
 		} else {
 			setUserId(response.userId);
 			setToken(response.token);
@@ -35,118 +32,86 @@ const RegisterForm = ({ handleOpen, setIsLogin }) => {
 			localStorage.setItem("userId", response.userId);
 			setMessage({ text: response.message, color: "green" });
 			navigate("/");
-			handleOpen(); // Cierra el modal después de registrarse
+			handleOpen();
 		}
 	}
 
 	return (
-		<Card color="transparent" shadow={false} className="flex items-center">
-			<Typography variant="h4" color="blue-gray">
-				Create an Account
-			</Typography>
-			<Typography color="gray" className="mt-1 font-normal">
-				Enter your details to register.
-			</Typography>
+		<form className="px-2 pb-4" onSubmit={handleRegister}>
 			{errorMessage && (
-				<AlertMessage
-					message={errorMessage}
-					color="red"
-					onClose={() => setErrorMessage("")}
-				/>
+				<div className="mb-4 bg-[#F26076]/10 border-2 border-[#F26076] text-[#F26076] text-sm px-4 py-3 rounded-xl font-medium">
+					{errorMessage}
+				</div>
 			)}
-			<form
-				className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
-				onSubmit={handleRegister}
-			>
-				<div className="mb-1 flex flex-col gap-6">
-					<Typography
-						variant="h6"
-						color="blue-gray"
-						className="-mb-3"
-					>
-						First Name
-					</Typography>
-					<Input
-						type="text"
-						value={firstName}
-						onChange={(e) => setFirstName(e.target.value)}
-						size="lg"
-						placeholder="John"
-						className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-						labelProps={{
-							className: "before:content-none after:content-none",
-						}}
-					/>
-					<Typography
-						variant="h6"
-						color="blue-gray"
-						className="-mb-3"
-					>
-						Last Name
-					</Typography>
-					<Input
-						type="text"
-						value={lastName}
-						onChange={(e) => setLastName(e.target.value)}
-						size="lg"
-						placeholder="Doe"
-						className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-						labelProps={{
-							className: "before:content-none after:content-none",
-						}}
-					/>
-					<Typography
-						variant="h6"
-						color="blue-gray"
-						className="-mb-3"
-					>
-						Your Email
-					</Typography>
-					<Input
+			<div className="flex flex-col gap-4">
+				<div className="flex gap-3">
+					<div className="flex-1">
+						<label className="block text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-1.5">
+							First name
+						</label>
+						<input
+							type="text"
+							value={firstName}
+							onChange={(e) => setFirstName(e.target.value)}
+							placeholder="John"
+							className="w-full px-4 py-3 border-2 border-[#1C1C1C] rounded-xl text-sm bg-white outline-none focus:border-[#F26076] transition-colors font-medium"
+						/>
+					</div>
+					<div className="flex-1">
+						<label className="block text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-1.5">
+							Last name
+						</label>
+						<input
+							type="text"
+							value={lastName}
+							onChange={(e) => setLastName(e.target.value)}
+							placeholder="Doe"
+							className="w-full px-4 py-3 border-2 border-[#1C1C1C] rounded-xl text-sm bg-white outline-none focus:border-[#F26076] transition-colors font-medium"
+						/>
+					</div>
+				</div>
+				<div>
+					<label className="block text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-1.5">
+						Email
+					</label>
+					<input
 						type="email"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
-						size="lg"
 						placeholder="name@mail.com"
-						className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-						labelProps={{
-							className: "before:content-none after:content-none",
-						}}
+						className="w-full px-4 py-3 border-2 border-[#1C1C1C] rounded-xl text-sm bg-white outline-none focus:border-[#F26076] transition-colors font-medium"
 					/>
-					<Typography
-						variant="h6"
-						color="blue-gray"
-						className="-mb-3"
-					>
+				</div>
+				<div>
+					<label className="block text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-1.5">
 						Password
-					</Typography>
-					<Input
+					</label>
+					<input
 						type="password"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
-						size="lg"
-						placeholder="********"
-						className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-						labelProps={{
-							className: "before:content-none after:content-none",
-						}}
+						placeholder="••••••••"
+						className="w-full px-4 py-3 border-2 border-[#1C1C1C] rounded-xl text-sm bg-white outline-none focus:border-[#F26076] transition-colors font-medium"
 					/>
 				</div>
-				<Button className="mt-6" fullWidth type="submit" color="amber">
-					Sign Up
-				</Button>
-			</form>
-			<Typography color="gray" className="mt-4 text-center">
+			</div>
+			<button
+				type="submit"
+				className="mt-6 w-full py-3 bg-[#F26076] text-white font-bold text-sm border-2 border-[#1C1C1C] rounded-xl shadow-[3px_3px_0px_#1C1C1C] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#1C1C1C] transition-all"
+			>
+				Create account
+			</button>
+			<p className="text-center text-sm text-[#6B6B6B] mt-4 font-medium">
 				Already have an account?{" "}
-				<Button
-					variant="text"
-					color="blue"
+				<button
+					type="button"
 					onClick={() => setIsLogin(true)}
+					className="font-bold text-[#458B73] hover:underline"
 				>
 					Login
-				</Button>
-			</Typography>
-		</Card>
+				</button>
+			</p>
+		</form>
 	);
 };
 

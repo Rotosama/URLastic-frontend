@@ -7,7 +7,21 @@ module.exports = withMT({
 		"./node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}",
 	],
 	theme: {
-		extend: {},
+		extend: {
+			colors: {
+				brand: {
+					coral: "#F26076",
+					orange: "#FF9760",
+					yellow: "#FFD150",
+					teal: "#458B73",
+					cream: "#FFFAF5",
+					dark: "#1C1C1C",
+				},
+			},
+			fontFamily: {
+				sans: ["Space Grotesk", "system-ui", "sans-serif"],
+			},
+		},
 	},
 	plugins: [],
 });

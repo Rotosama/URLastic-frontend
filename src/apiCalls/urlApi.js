@@ -3,18 +3,15 @@ import axios from "axios";
 class urlAPI {
 	static async postUrl(token, originalUrl) {
 		const requestUrl = `${process.env.REACT_APP_BASE_URL}urls/`;
-		const config = {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		};
+		const config = token
+			? { headers: { Authorization: `Bearer ${token}` } }
+			: {};
 		try {
 			const response = await axios.post(
 				requestUrl,
 				{ originalUrl: originalUrl },
 				config
 			);
-
 			return response.data;
 		} catch (error) {
 			console.error(error);
@@ -46,11 +43,51 @@ class urlAPI {
 			},
 		};
 		try {
-			const response = await axios.get(requestUrl, urlId, config);
+			const response = await axios.get(requestUrl, config);
 			return response.data;
 		} catch (error) {
 			console.error(error);
 			return error.response.data;
+		}
+	}
+
+	static async deleteUrl(token, urlId) {
+		let requestUrl = `${process.env.REACT_APP_BASE_URL}urls/${urlId}`;
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		try {
+			const response = await axios.delete(requestUrl, config);
+			return response.data;
+		} catch (error) {
+			console.error(error);
+			return error.response.data;
+		}
+	}
+
+	static async getUserById(token, userId) {
+		const requestUrl = `${process.env.REACT_APP_BASE_URL}users/${userId}`;
+		const config = { headers: { Authorization: `Bearer ${token}` } };
+		try {
+			const response = await axios.get(requestUrl, config);
+			return response.data;
+		} catch (error) {
+			console.error(error);
+			return null;
+		}
+	}
+
+	static async deleteUser(token, userId) {
+		const requestUrl = `${process.env.REACT_APP_BASE_URL}users/${userId}`;
+		const config = { headers: { Authorization: `Bearer ${token}` } };
+		try {
+			const response = await axios.delete(requestUrl, config);
+			return response.data;
+		} catch (error) {
+			console.error(error);
+			return null;
 		}
 	}
 
@@ -62,7 +99,7 @@ class urlAPI {
 			},
 		};
 		try {
-			const response = await axios.put(
+			const response = await axios.patch(
 				requestUrl,
 				{ customURL: customURL },
 				config

@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { Button } from "@material-tailwind/react";
 import LoginModal from "../LoginModal";
 import { UserContext } from "../../context/UserContext";
 
@@ -9,9 +8,7 @@ const LoginButton = () => {
 		useContext(UserContext);
 
 	const handleOpen = () => {
-		if (!isLogged) {
-			setOpen(!open);
-		}
+		if (!isLogged) setOpen(!open);
 	};
 
 	const handleLogout = () => {
@@ -25,14 +22,20 @@ const LoginButton = () => {
 	return (
 		<>
 			{isLogged ? (
-				<Button variant="text" color="blue" onClick={handleLogout}>
+				<button
+					onClick={handleLogout}
+					className="px-4 py-2 text-sm font-bold text-[#458B73] border-2 border-[#458B73] rounded-xl hover:bg-[#458B73] hover:text-white transition-colors"
+				>
 					Logout
-				</Button>
+				</button>
 			) : (
 				<>
-					<Button variant="text" color="blue" onClick={handleOpen}>
-						Login
-					</Button>
+					<button
+						onClick={handleOpen}
+						className="px-4 py-2 text-sm font-bold text-white bg-[#F26076] border-2 border-[#1C1C1C] rounded-xl shadow-[3px_3px_0px_#1C1C1C] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#1C1C1C] transition-all"
+					>
+						Login / Sign Up
+					</button>
 					<LoginModal open={open} handleOpen={handleOpen} />
 				</>
 			)}

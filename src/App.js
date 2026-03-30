@@ -6,7 +6,6 @@ import Home from "./components/Home";
 import CustomNavbar from "./components/Navbar/CustomNavbar";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
-import Redirect from "./components/Redirect";
 import Dashboard from "./components/User/Dashboard";
 import Account from "./components/User/Account";
 import NotFound from "./components/NotFound";
@@ -27,10 +26,6 @@ function App() {
 							/>
 							<Route path="/dashboard" element={<Dashboard />} />
 							<Route path="/account" element={<Account />} />
-							<Route
-								path="/urls/r/:shortUrl"
-								element={<Redirect />}
-							/>
 							<Route path="/404" element={<NotFound />} />
 						</Routes>
 					</Router>

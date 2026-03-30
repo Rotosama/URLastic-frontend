@@ -1,16 +1,14 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import "./assets/index.css"; // Importa el archivo CSS de Tailwind
+import { createRoot } from "react-dom/client";
+import "./assets/index.css";
 import App from "./App";
 import { ThemeProvider } from "@material-tailwind/react";
 
-document.body.classList.add("bg-gray-200");
-
-ReactDOM.render(
+const root = createRoot(document.getElementById("root"));
+root.render(
 	<React.StrictMode>
 		<ThemeProvider>
 			<App />
 		</ThemeProvider>
-	</React.StrictMode>,
-	document.getElementById("root")
+	</React.StrictMode>
 );
