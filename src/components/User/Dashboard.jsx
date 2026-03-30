@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import urlAPI from "../../apiCalls/urlApi";
 import { UserContext } from "../../context/UserContext";
+import { buildShortUrl } from "../../utils/urlHelpers";
+import ConfirmDialog from "../ui/ConfirmDialog";
 import {
 	TrashIcon,
 	LinkIcon,
@@ -31,8 +33,7 @@ const Dashboard = () => {
 	};
 
 	const handleCopy = (url) => {
-		const fullUrl = `${process.env.REACT_APP_BASE_URL}urls/r/${url.shortenUrl}`;
-		navigator.clipboard.writeText(fullUrl);
+		navigator.clipboard.writeText(buildShortUrl(url.shortenUrl));
 		setCopiedId(url._id);
 		setTimeout(() => setCopiedId(null), 2000);
 	};
@@ -50,32 +51,13 @@ const Dashboard = () => {
 					</span>
 				</div>
 
-				{/* Confirm delete dialog */}
 				{confirmDelete && (
-					<div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
-						<div className="bg-white border-2 border-[#1C1C1C] rounded-2xl shadow-[6px_6px_0px_#1C1C1C] p-6 max-w-sm w-full">
-							<h3 className="font-bold text-lg text-[#1C1C1C] mb-2">
-								Delete this URL?
-							</h3>
-							<p className="text-sm text-[#6B6B6B] mb-6 break-all">
-								{confirmDelete.originalUrl}
-							</p>
-							<div className="flex gap-3">
-								<button
-									onClick={() => setConfirmDelete(null)}
-									className="flex-1 py-2.5 border-2 border-[#1C1C1C] rounded-xl text-sm font-bold bg-white shadow-[2px_2px_0px_#1C1C1C] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#1C1C1C] transition-all"
-								>
-									Cancel
-								</button>
-								<button
-									onClick={() => handleDelete(confirmDelete._id)}
-									className="flex-1 py-2.5 bg-[#F26076] text-white border-2 border-[#1C1C1C] rounded-xl text-sm font-bold shadow-[2px_2px_0px_#1C1C1C] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#1C1C1C] transition-all"
-								>
-									Delete
-								</button>
-							</div>
-						</div>
-					</div>
+					<ConfirmDialog
+						title="Delete this URL?"
+						description={confirmDelete.originalUrl}
+						onConfirm={() => handleDelete(confirmDelete._id)}
+						onCancel={() => setConfirmDelete(null)}
+					/>
 				)}
 
 				{urls.length === 0 ? (
@@ -111,9 +93,7 @@ const Dashboard = () => {
 									<tr
 										key={url._id}
 										className={`border-t-2 border-[#F0EBE3] ${
-											index % 2 === 1
-												? "bg-[#FFFAF5]"
-												: "bg-white"
+											index % 2 === 1 ? "bg-[#FFFAF5]" : "bg-white"
 										}`}
 									>
 										<td className="px-6 py-4 max-w-xs">
@@ -123,7 +103,7 @@ const Dashboard = () => {
 										</td>
 										<td className="px-6 py-4">
 											<a
-												href={`${process.env.REACT_APP_BASE_URL}urls/r/${url.shortenUrl}`}
+												href={buildShortUrl(url.shortenUrl)}
 												target="_blank"
 												rel="noreferrer"
 												className="text-sm font-bold text-[#F26076] hover:underline"

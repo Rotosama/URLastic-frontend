@@ -68,6 +68,7 @@ const Home = () => {
 	const [url, setUrl] = useState("");
 	const [urlId, setUrlId] = useState("");
 	const [urlError, setUrlError] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 	const { token, isLogged } = useContext(UserContext);
 	const { message, setMessage } = useMessageContext();
 	const [showCollapse, setShowCollapse] = useState(false);
@@ -80,7 +81,9 @@ const Home = () => {
 			return;
 		}
 		setUrlError("");
+		setIsLoading(true);
 		const response = await urlAPI.postUrl(token, url);
+		setIsLoading(false);
 		setUrlId(response._id);
 	}
 
@@ -151,10 +154,23 @@ const Home = () => {
 						)}
 						<button
 							onClick={cutUrl}
-							className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#F26076] text-white border-2 border-[#1C1C1C] rounded-xl text-sm font-bold shadow-[3px_3px_0px_#1C1C1C] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#1C1C1C] transition-all"
+							disabled={isLoading}
+							className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#F26076] text-white border-2 border-[#1C1C1C] rounded-xl text-sm font-bold shadow-[3px_3px_0px_#1C1C1C] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#1C1C1C] transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:translate-x-0 disabled:translate-y-0 disabled:shadow-[3px_3px_0px_#1C1C1C]"
 						>
-							<ScissorsIcon className="h-4 w-4" />
-							Shorten URL
+							{isLoading ? (
+								<>
+									<svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+										<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+										<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+									</svg>
+									Shortening...
+								</>
+							) : (
+								<>
+									<ScissorsIcon className="h-4 w-4" />
+									Shorten URL
+								</>
+							)}
 						</button>
 					</div>
 
@@ -163,13 +179,13 @@ const Home = () => {
 					)}
 
 					{urlId && (
-						<div className="mt-8">
+						<div key={urlId} className="mt-8 animate-spring-in">
 							<ShortenURL url={url} urlId={urlId} />
 						</div>
 					)}
 
 					{urlId && !isLogged && (
-						<div className="mt-4 flex items-start gap-3 bg-white border-2 border-[#1C1C1C] rounded-xl px-4 py-3.5 shadow-[3px_3px_0px_#1C1C1C]">
+						<div className="mt-4 flex items-start gap-3 bg-white border-2 border-[#1C1C1C] rounded-xl px-4 py-3.5 shadow-[3px_3px_0px_#1C1C1C] animate-spring-in">
 							<SparklesIcon className="h-5 w-5 text-[#FF9760] flex-shrink-0 mt-0.5" />
 							<p className="text-sm text-[#6B6B6B] font-medium">
 								<span className="font-bold text-[#1C1C1C]">

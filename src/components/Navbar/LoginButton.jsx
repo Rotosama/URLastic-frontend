@@ -4,26 +4,17 @@ import { UserContext } from "../../context/UserContext";
 
 const LoginButton = () => {
 	const [open, setOpen] = useState(false);
-	const { isLogged, setIsLogged, setToken, setUserId } =
-		useContext(UserContext);
+	const { isLogged, logout } = useContext(UserContext);
 
 	const handleOpen = () => {
 		if (!isLogged) setOpen(!open);
-	};
-
-	const handleLogout = () => {
-		setIsLogged(false);
-		setToken(null);
-		setUserId(null);
-		localStorage.removeItem("token");
-		localStorage.removeItem("userId");
 	};
 
 	return (
 		<>
 			{isLogged ? (
 				<button
-					onClick={handleLogout}
+					onClick={logout}
 					className="px-4 py-2 text-sm font-bold text-[#458B73] border-2 border-[#458B73] rounded-xl hover:bg-[#458B73] hover:text-white transition-colors"
 				>
 					Logout

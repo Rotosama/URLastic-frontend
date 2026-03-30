@@ -3,9 +3,10 @@ import registerAPI from "../apiCalls/registerApi";
 import { useUserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { useMessageContext } from "../context/MessageContext";
+import FormField from "./ui/FormField";
 
 const RegisterForm = ({ handleOpen, setIsLogin }) => {
-	const { setToken, setIsLogged, setUserId } = useUserContext();
+	const { login } = useUserContext();
 	const { setMessage } = useMessageContext();
 	const navigate = useNavigate();
 	const [firstName, setFirstName] = useState("");
@@ -16,20 +17,11 @@ const RegisterForm = ({ handleOpen, setIsLogin }) => {
 
 	async function handleRegister(event) {
 		event.preventDefault();
-		const response = await registerAPI.registerUser(
-			firstName,
-			lastName,
-			email,
-			password
-		);
+		const response = await registerAPI.registerUser(firstName, lastName, email, password);
 		if (response.error) {
 			setErrorMessage(response.error.message);
 		} else {
-			setUserId(response.userId);
-			setToken(response.token);
-			setIsLogged(true);
-			localStorage.setItem("token", response.token);
-			localStorage.setItem("userId", response.userId);
+			login(response.token, response.userId);
 			setMessage({ text: response.message, color: "green" });
 			navigate("/");
 			handleOpen();
@@ -46,54 +38,36 @@ const RegisterForm = ({ handleOpen, setIsLogin }) => {
 			<div className="flex flex-col gap-4">
 				<div className="flex gap-3">
 					<div className="flex-1">
-						<label className="block text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-1.5">
-							First name
-						</label>
-						<input
-							type="text"
+						<FormField
+							label="First name"
 							value={firstName}
 							onChange={(e) => setFirstName(e.target.value)}
 							placeholder="John"
-							className="w-full px-4 py-3 border-2 border-[#1C1C1C] rounded-xl text-sm bg-white outline-none focus:border-[#F26076] transition-colors font-medium"
 						/>
 					</div>
 					<div className="flex-1">
-						<label className="block text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-1.5">
-							Last name
-						</label>
-						<input
-							type="text"
+						<FormField
+							label="Last name"
 							value={lastName}
 							onChange={(e) => setLastName(e.target.value)}
 							placeholder="Doe"
-							className="w-full px-4 py-3 border-2 border-[#1C1C1C] rounded-xl text-sm bg-white outline-none focus:border-[#F26076] transition-colors font-medium"
 						/>
 					</div>
 				</div>
-				<div>
-					<label className="block text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-1.5">
-						Email
-					</label>
-					<input
-						type="email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						placeholder="name@mail.com"
-						className="w-full px-4 py-3 border-2 border-[#1C1C1C] rounded-xl text-sm bg-white outline-none focus:border-[#F26076] transition-colors font-medium"
-					/>
-				</div>
-				<div>
-					<label className="block text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-1.5">
-						Password
-					</label>
-					<input
-						type="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						placeholder="••••••••"
-						className="w-full px-4 py-3 border-2 border-[#1C1C1C] rounded-xl text-sm bg-white outline-none focus:border-[#F26076] transition-colors font-medium"
-					/>
-				</div>
+				<FormField
+					label="Email"
+					type="email"
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
+					placeholder="name@mail.com"
+				/>
+				<FormField
+					label="Password"
+					type="password"
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
+					placeholder="••••••••"
+				/>
 			</div>
 			<button
 				type="submit"

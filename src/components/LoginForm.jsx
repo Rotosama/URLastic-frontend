@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 import { useMessageContext } from "../context/MessageContext";
 import loginAPI from "../apiCalls/loginApi";
+import FormField from "./ui/FormField";
 
 const LoginForm = ({ handleOpen, setIsLogin }) => {
 	const navigate = useNavigate();
-	const { setUserId, setToken, setIsLogged } = useUserContext();
+	const { login } = useUserContext();
 	const { setMessage } = useMessageContext();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -18,11 +19,7 @@ const LoginForm = ({ handleOpen, setIsLogin }) => {
 		if (response.error) {
 			setErrorMessage(response.message);
 		} else {
-			setUserId(response.userId);
-			setToken(response.token);
-			setIsLogged(true);
-			localStorage.setItem("token", response.token);
-			localStorage.setItem("userId", response.userId);
+			login(response.token, response.userId);
 			setMessage({ text: response.message, color: "green" });
 			navigate("/");
 			handleOpen();
@@ -37,30 +34,20 @@ const LoginForm = ({ handleOpen, setIsLogin }) => {
 				</div>
 			)}
 			<div className="flex flex-col gap-4">
-				<div>
-					<label className="block text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-1.5">
-						Email
-					</label>
-					<input
-						type="email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						placeholder="name@mail.com"
-						className="w-full px-4 py-3 border-2 border-[#1C1C1C] rounded-xl text-sm bg-white outline-none focus:border-[#F26076] transition-colors font-medium"
-					/>
-				</div>
-				<div>
-					<label className="block text-xs font-bold uppercase tracking-widest text-[#6B6B6B] mb-1.5">
-						Password
-					</label>
-					<input
-						type="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						placeholder="••••••••"
-						className="w-full px-4 py-3 border-2 border-[#1C1C1C] rounded-xl text-sm bg-white outline-none focus:border-[#F26076] transition-colors font-medium"
-					/>
-				</div>
+				<FormField
+					label="Email"
+					type="email"
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
+					placeholder="name@mail.com"
+				/>
+				<FormField
+					label="Password"
+					type="password"
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
+					placeholder="••••••••"
+				/>
 			</div>
 			<button
 				type="submit"
